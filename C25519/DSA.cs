@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Numerics;
 using System.Security.Cryptography;
-
+using System.Text;
 
 namespace C25519
 {
-    static class DSA
+    static class EcDSA
     {
         public static (BigInteger R, BigInteger S) Sign(byte[] message, C25519Key key)
         {
@@ -53,7 +53,7 @@ namespace C25519
             do
             {
                 // Random r instead of hash(hash(privateKey) + msg) mod q
-                r = new BigInteger(RandomNumberGenerator.GetBytes(32),true,true);
+                r = new BigInteger(RandomNumberGenerator.GetBytes(32), true, true);
                 R = C25519Point.Multiply(r, C25519Point.G.X, C25519Point.G.Y, C25519Point.P);
             } while (R.X % C25519Point.N == 0);
 
@@ -106,7 +106,7 @@ namespace C25519
             var y_r = R.Y;
             C25519Point.AddPoints(ref x_r, ref y_r, p2_2.X, p2_2.Y, C25519Point.P);
             var p2 = new C25519Point(x_r, y_r);
-          
+
             return (p1.X == p2.X && p1.Y == p2.Y);
         }
 
